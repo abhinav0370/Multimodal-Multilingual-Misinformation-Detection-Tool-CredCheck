@@ -105,4 +105,14 @@ streamlit run main.py
 - **Analyze Headline**: Choose between Text, Audio, Image, or Video input methods to analyze news headlines for credibility.
 - **Real-Time News Analysis**: Fetch and analyze the top news headlines in real-time.
 
+### Acknowledgements
+This project leverages technologies and services from:
+
+- Streamlit
+- ClaimBuster
+- Google Generative AI
+- spaCy
+- FFmpeg
+- Tesseract OCR
+
 
