@@ -13,7 +13,7 @@ def extract_audio(video_path, audio_path="output_audio.wav"):
             "a",
             audio_path
         ]
-        subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, check=True)
-        return audio_path
+        subprocess.run(command, stdout=subprocess.DEVNULL, stder=subprocess.STDOUT, check=True)
+        return f"Audio extracted successfully: {audio_path}"
     except subprocess.CalledProcessError as e:
         return f"Error: {e}"
