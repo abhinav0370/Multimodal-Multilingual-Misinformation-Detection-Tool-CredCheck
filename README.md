@@ -77,6 +77,7 @@ You'll need to obtain the following API keys:
 - Google Generative AI API Key (from Google Cloud Console)
 - ClaimBuster API Key
 - Google Custom Search Engine ID
+- NewsAPI Api Key 
 
 #### Set Environment Variables
 
@@ -101,7 +102,7 @@ streamlit run main.py
 
 ### Features
 
-- **Analyze Headline**: Choose between Text, Audio, Image, or Video input methods to analyze news headlines for credibility
-- **Real-Time News Analysis**: Fetch and analyze the top news headlines in real-time
+- **Analyze Headline**: Choose between Text, Audio, Image, or Video input methods to analyze news headlines for credibility.
+- **Real-Time News Analysis**: Fetch and analyze the top news headlines in real-time.
 
 
