@@ -3,7 +3,7 @@ import requests
 import streamlit as st
 
 # NewsAPI endpoint and API key
-API_KEY = ""
+API_KEY = st.secrets["news"]["api_key"]
 BASE_URL = "https://newsapi.org/v2/top-headlines"
 
 # Parameters for the API request
