@@ -23,7 +23,7 @@ def is_english(text):
         return False
 
 # Define threshold for fake news classification
-SCORE_THRESHOLD = 0.5
+SCORE_THRESHOLD = 0.66
 
 def classify_claim(score):
     """Classify the claim based on the score."""
