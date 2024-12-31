@@ -4,11 +4,12 @@ Pillow
 pytesseract
 transformers
 torch
-speechrecognition
-pydub
+#speechrecognition
+#pydub
 requests
 google-generativeai
 absl-py
 numpy
 scikit-learn
 spacy
+openai-whisper
