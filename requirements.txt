@@ -13,3 +13,5 @@ numpy
 scikit-learn
 spacy
 openai-whisper
+plotly
+pandas
