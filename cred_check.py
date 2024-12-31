@@ -14,8 +14,8 @@ import streamlit as st
 # Constants
 # ---------------------------
 
-GOOGLE_API_KEY = st.secrets["google"]["search_api_key"]
-CUSTOM_SEARCH_ENGINE_ID = st.secrets["google"]["search_engine_id"]
+GOOGLE_API_KEY = ""
+CUSTOM_SEARCH_ENGINE_ID = ""
 
 TRUSTED_SOURCES = [
     "bbc.com", "reuters.com", "apnews.com", "snopes.com", "theguardian.com", "nytimes.com", "washingtonpost.com",
