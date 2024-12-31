@@ -9,7 +9,7 @@ absl.logging.set_verbosity(absl.logging.ERROR)
 absl.logging.set_stderrthreshold(absl.logging.ERROR)
 
 # Set up your API key (replace with your actual API key)
-os.environ['GOOGLE_API_KEY'] = ""
+os.environ['GOOGLE_API_KEY'] = st.secrets["google"]["language_api_key"]
 genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
 
 # Load the desired model
