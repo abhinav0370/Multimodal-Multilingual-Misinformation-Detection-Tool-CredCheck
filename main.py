@@ -1,16 +1,15 @@
 import streamlit as st
 import os
 from langdetect import detect
-from audio_to_text import audio_to_text
+from audio_to_text import transcribe_audio
+from video_to_text import transcribe_and_translate_video
 from convert_to_english import translation
 from cred_check import fake_news_detector
 from claimbuster_check import check_claim
 from top_headlines import fetch_headlines
 from img_to_text import extract_text_from_image
-from video_to_audio import extract_audio
 from PIL import Image
 import plotly.express as px
-import plotly.graph_objects as go
 import pandas as pd
 
 # ---------------------------
@@ -38,7 +37,7 @@ def classify_auth(is_fake):
 # 1. Page Configuration
 # ---------------------------
 st.set_page_config(
-    page_title="🔍 Fake News Detector",
+    page_title="🔍 CredCheck",
     page_icon="📰",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -124,7 +123,7 @@ footer {visibility: hidden;}
 /* Content Section Styling */
 .content {
     margin-top: 50px;
-    
+    text-align: center;
 }
 
 .content .input-methods {
@@ -132,7 +131,7 @@ footer {visibility: hidden;}
 }
 
 .content .input-methods button {
-    margin: 2px;
+    margin: 3px;
     padding: 2px 3px;
     font-size: 18px;
     border: none;
@@ -192,7 +191,6 @@ footer {visibility: hidden;}
 
 </style>
 """
-
 # Inject custom CSS
 st.markdown(custom_css, unsafe_allow_html=True)
 
@@ -210,8 +208,6 @@ header = """
 </div>
 """
 st.markdown(header, unsafe_allow_html=True)
-
-
 
 # ---------------------------
 # 4. Hero Section using st.image with use_container_width
@@ -305,7 +301,7 @@ with st.container():
                     temp_audio_path = "temp_audio.wav"
                     with open(temp_audio_path, "wb") as f:
                         f.write(audio_file.getbuffer())
-                    text = audio_to_text(temp_audio_path)
+                    text = transcribe_audio(temp_audio_path)
                     os.remove(temp_audio_path)
                     st.markdown(f"**Transcribed Text:** {text}")
                     st.info("📊 Analyzing text with CredCheck...")
@@ -391,42 +387,36 @@ with st.container():
                     temp_video_path = "temp_video.mp4"
                     with open(temp_video_path, "wb") as f:
                         f.write(video_file.getbuffer())
-                    extracted_audio_path = extract_audio(temp_video_path)
-                    if extracted_audio_path.startswith("Error:"):
-                        st.error(extracted_audio_path)
-                        os.remove(temp_video_path)
-                    else:
-                        text = audio_to_text(extracted_audio_path)
-                        st.markdown(f"**Transcribed Text from Video:** {text}")
-                        os.remove(extracted_audio_path)
-                        os.remove(temp_video_path)
-                        st.info("📊 Analyzing text with CredCheck...")
-                        auth_result = fake_news_detector(text)
-                        st.markdown(f"**CredCheck Classification:** {classify_auth(auth_result.get('is_fake', False))}")
-                        
-                        # Only use ClaimBuster if flagged as fake
-                        if auth_result.get('is_fake', False):
-                            if not is_english(text):
-                                st.info("🔄 Translating to English for External API")
-                                translated_text = translation(text)
-                                st.success(f"**Translated Text:** {translated_text}")
-                            else:
-                                translated_text = text
-                            st.info("🔍 Verifying Flagged Content With External API")
-                            claimbuster_result = check_claim(translated_text)
-                            
-                            if "error" in claimbuster_result:
-                                st.error(claimbuster_result["error"])
-                            else:
-                                for result in claimbuster_result["results"]:
-                                    score = result["score"]
-                                    classification = classify_claim(score)
-                                    st.markdown(f"**Claim:** {result['text']}")
-                                    st.markdown(f"**Score:** {score}")
-                                    st.markdown(f"**ClaimBuster Classification:** {classification}")
-                                    st.markdown("---")
+                    text = transcribe_and_translate_video(temp_video_path)
+                    os.remove(temp_video_path)
+                    st.markdown(f"**Transcribed Text from Video:** {text}")
+                    st.info("📊 Analyzing text with CredCheck...")
+                    auth_result = fake_news_detector(text)
+                    st.markdown(f"**CredCheck Classification:** {classify_auth(auth_result.get('is_fake', False))}")
+                    
+                    # Only use ClaimBuster if flagged as fake
+                    if auth_result.get('is_fake', False):
+                        if not is_english(text):
+                            st.info("🔄 Translating to English for External API")
+                            translated_text = translation(text)
+                            st.success(f"**Translated Text:** {translated_text}")
                         else:
-                            st.success("✅ The news is classified as real.")
+                            translated_text = text
+                        st.info("🔍 Verifying Flagged Content With External API")
+                        claimbuster_result = check_claim(translated_text)
+                        
+                        if "error" in claimbuster_result:
+                            st.error(claimbuster_result["error"])
+                        else:
+                            for result in claimbuster_result["results"]:
+                                score = result["score"]
+                                classification = classify_claim(score)
+                                st.markdown(f"**Claim:** {result['text']}")
+                                st.markdown(f"**Score:** {score}")
+                                st.markdown(f"**ClaimBuster Classification:** {classification}")
+                                st.markdown("---")
+                    else:
+                        st.success("✅ The news is classified as real.")
             else:
                 st.error("⚠️ Please upload a video file.")
 
@@ -452,15 +442,18 @@ if st.button("Fetch Top Headlines"):
 
             # Analyze each headline with CredCheck first
             with st.spinner('📊 Analyzing headlines with CredCheck...'):
+                results = []
                 for idx, headline in enumerate(headlines_to_analyze, start=1):
                     st.write(f"**Headline {idx}:** {headline}")
                     
                     # CredCheck Fake News Detection
                     auth_result = fake_news_detector(headline)
-                    st.write(f"**CredCheck Classification:** {classify_auth(auth_result.get('is_fake', False))}")
+                    is_fake = auth_result.get('is_fake', False)
+                    classification = classify_auth(is_fake)
+                    st.write(f"**CredCheck Classification:** {classification}")
                     
                     # Only use ClaimBuster if flagged as fake
-                    if auth_result.get('is_fake', False):
+                    if is_fake:
                         st.info("🔍 Verifying Flagged Content With External API")
                         claimbuster_result = check_claim(headline)
                         if "error" in claimbuster_result:
@@ -468,60 +461,63 @@ if st.button("Fetch Top Headlines"):
                         else:
                             for result in claimbuster_result["results"]:
                                 score = result["score"]
-                                classification = classify_claim(score)
+                                claim_classification = classify_claim(score)
                                 st.write(f"**Claim:** {result['text']}")
                                 st.write(f"**Score:** {score}")
-                                st.write(f"**ClaimBuster Classification:** {classification}")
+                                st.write(f"**ClaimBuster Classification:** {claim_classification}")
+                                results.append({'headline': headline, 'score': score, 'classification': claim_classification})
                     else:
                         st.success("✅ The news is classified as real.")
+                        results.append({'headline': headline, 'score': 1.0, 'classification': classification})
                     st.markdown("---")
-        else:
-            st.error(headlines.get("error", "⚠️ An error occurred."))
+
+                
 
 # ---------------------------
-# 7. Dashboard Section using Plotly
+# 7. Dashboard Section
 # ---------------------------
 st.markdown('<div id="dashboard"></div>', unsafe_allow_html=True)
 
 st.header("📊 Dashboard")
+st.markdown("### Analysis Metrics and Graphs")
 
-# Generate Dummy Data
-dummy_data = {
-    'Category': ['Politics', 'Health', 'Technology', 'Entertainment', 'Business'],
-    'Fake News': [30, 20, 25, 15, 40]
-}
+# Calculate metrics based on the analysis results
+if 'results' in locals():
+    total_news = len(results)
+    num_real = sum(1 for result in results if result['classification'] == "🟢 Real")
+    num_fake = sum(1 for result in results if result['classification'] == "🔴 Fake")
+    real_percentage = (num_real / total_news) * 100 if total_news > 0 else 0
+    fake_percentage = (num_fake / total_news) * 100 if total_news > 0 else 0
 
-df = pd.DataFrame(dummy_data)
+    # Display metrics
+    st.metric(label="Total News Analyzed", value=total_news)
+    st.metric(label="Percentage of Real News", value=f"{real_percentage:.2f}%")
+    st.metric(label="Percentage of Fake News", value=f"{fake_percentage:.2f}%")
 
-# Scatter Plot: Correlation between Real and Fake News
-fig4 = px.scatter(df, x='Fake News', y='Fake News', 
-                 size='Fake News', 
-                 color='Category',
-                 hover_name='Category',
-                 title='Correlation between Real and Fake News by Category')
+    # Create data frame for graphs
+    df_dashboard = pd.DataFrame(results)
 
-# Display Plots in Columns
-col1, col2 = st.columns(2)
+    # Bar chart for Real vs Fake news count
+    fig_dashboard = px.bar(
+        df_dashboard,
+        x='classification',
+        title="Real vs Fake News Count"
+    )
+    st.plotly_chart(fig_dashboard)
 
-with col1:
-    st.plotly_chart(fig4, use_container_width=True)
+    # Pie chart for Real vs Fake news distribution
+    fig_pie_dashboard = px.pie(
+        df_dashboard,
+        names='classification',
+        title="Real vs Fake News Distribution"
+    )
+    st.plotly_chart(fig_pie_dashboard)
 
-with col2:
-    # Line Chart: Trend of Fake News Over Time (Dummy Months)
-    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
-    fake_trend = [5, 10, 7, 12, 9, 14]
-    real_trend = [20, 25, 23, 30, 28, 35]
-    
-    fig3 = go.Figure()
-    fig3.add_trace(go.Scatter(x=months, y=real_trend, mode='lines+markers', name='Real News'))
-    fig3.add_trace(go.Scatter(x=months, y=fake_trend, mode='lines+markers', name='Fake News'))
-    fig3.update_layout(title='Trend of Fake News Over Time', xaxis_title='Month', yaxis_title='Number of Articles')
-    
-    st.plotly_chart(fig3, use_container_width=True)
+else:
+    st.warning("No analysis data available. Please perform the analysis first.")
 
 # ---------------------------
 # 8. Footer
-# ---------------------------
 footer = """
 <div class="footer">
     <p>A Prototype Developed by <strong>Team Ignite</strong></p>
@@ -532,5 +528,3 @@ footer = """
 
 """
 st.markdown(footer, unsafe_allow_html=True)
-
-
