@@ -2,8 +2,8 @@
 import requests
 import streamlit as st
 
-API_KEY = ""
-API_ENDPOINT = ""
+API_KEY = st.secrets["claimbuster"]["api_key"]
+API_ENDPOINT = st.secrets["claimbuster"]["endpoint"]
 
 def check_claim(sentences):
     url = f"{API_ENDPOINT}{requests.utils.quote(sentences)}"
