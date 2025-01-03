@@ -1,6 +1,6 @@
 # Multimodal and Multilingual Misinformation Detection Tool-CredCheck
 
-A comprehensive Streamlit application designed to detect fake news from various inputs such as text, audio, images, and videos.
+A comprehensive application designed to detect fake news from various inputs such as text, audio, images, and videos.
 
 ## Features
 
@@ -79,18 +79,6 @@ You'll need to obtain the following API keys:
 - Google Custom Search Engine ID
 - NewsAPI Api Key 
 
-#### Set Environment Variables
-
-For security, set your API keys as environment variables:
-
-```bash
-export GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY"
-export CLAIMBUSTER_API_KEY="YOUR_CLAIMBUSTER_API_KEY"
-export CUSTOM_SEARCH_ENGINE_ID="YOUR_CUSTOM_SEARCH_ENGINE_ID"
-export TESSERACT_CMD="C:\\Program Files\\Tesseract-OCR\\tesseract.exe"  # For Windows
-```
-
-For Windows, set these through System Properties.
 
 ## Usage
 
