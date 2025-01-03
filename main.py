@@ -12,6 +12,9 @@ from PIL import Image
 import plotly.express as px
 import pandas as pd
 
+# ---------------------------
+# 8. Helper Functions
+# ---------------------------
 def is_english(text):
     """Check if the given text is in English."""
     try:
@@ -19,7 +22,7 @@ def is_english(text):
     except:
         return False
 
-# Defining threshold for fake news classification
+# Define threshold for fake news classification
 SCORE_THRESHOLD = 0.66
 
 def classify_claim(score):
@@ -30,9 +33,9 @@ def classify_auth(is_fake):
     """Classify the authentication result."""
     return "🔴 Fake" if is_fake else "🟢 Real"
 
-
-# Page Configuration
-
+# ---------------------------
+# 1. Page Configuration
+# ---------------------------
 st.set_page_config(
     page_title="🔍 CredCheck",
     page_icon="📰",
@@ -40,6 +43,9 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
+# ---------------------------
+# 2. Custom CSS for Layout and Styling
+# ---------------------------
 custom_css = """
 <style>
 /* Increased Margins for Improved Readability */
@@ -185,11 +191,12 @@ footer {visibility: hidden;}
 
 </style>
 """
-# Injecting custom CSS
+# Inject custom CSS
 st.markdown(custom_css, unsafe_allow_html=True)
 
-# Header Section with Navigation Link to Metrics
-
+# ---------------------------
+# 3. Header Section with Navigation Link to Metrics
+# ---------------------------
 header = """
 <div class="header">
     <div class="title">CredCheck</div>
@@ -202,11 +209,12 @@ header = """
 """
 st.markdown(header, unsafe_allow_html=True)
 
-# Hero Section using st.image with use_container_width
-
+# ---------------------------
+# 4. Hero Section using st.image with use_container_width
+# ---------------------------
 st.markdown('<div class="hero"></div>', unsafe_allow_html=True)
 
-# Loads and displays the image
+# Load and display the image
 image_path = os.path.join("images", "img1.png")  # Ensure the path is correct
 try:
     hero_image = Image.open(image_path)
@@ -214,8 +222,9 @@ try:
 except FileNotFoundError:
     st.error(f"Image not found at path: {image_path}. Please ensure the image exists.")
 
-# Content Section - News Check
-
+# ---------------------------
+# 5. Content Section - News Check
+# ---------------------------
 st.markdown('<div id="news-check"></div>', unsafe_allow_html=True)
 
 with st.container():
@@ -411,7 +420,10 @@ with st.container():
             else:
                 st.error("⚠️ Please upload a video file.")
 
-# an HTML anchor for Real Time Analysis
+# ---------------------------
+# 6. Secondary Content - Real Time News Analysis
+# ---------------------------
+# Add an HTML anchor for Real Time Analysis
 st.markdown('<div id="real-time-analysis"></div>', unsafe_allow_html=True)
 
 # Separate Top Headlines Section
@@ -458,15 +470,18 @@ if st.button("Fetch Top Headlines"):
                         st.success("✅ The news is classified as real.")
                         results.append({'headline': headline, 'score': 1.0, 'classification': classification})
                     st.markdown("---")
-                    
-# Dashboard Section
 
+                
+
+# ---------------------------
+# 7. Dashboard Section
+# ---------------------------
 st.markdown('<div id="dashboard"></div>', unsafe_allow_html=True)
 
 st.header("📊 Dashboard")
 st.markdown("### Analysis Metrics and Graphs")
 
-# Calculate metrics based on the real time analysis results
+# Calculate metrics based on the analysis results
 if 'results' in locals():
     total_news = len(results)
     num_real = sum(1 for result in results if result['classification'] == "🟢 Real")
@@ -501,7 +516,8 @@ if 'results' in locals():
 else:
     st.warning("No analysis data available. Please perform the analysis first.")
 
-# footer
+# ---------------------------
+# 8. Footer
 footer = """
 <div class="footer">
     <p>A Prototype Developed by <strong>Team Ignite</strong></p>
