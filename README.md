@@ -2,13 +2,13 @@
 
 A comprehensive application designed to detect fake news from various inputs such as text, audio, images, and videos.
 
-## Features
+## Functionalities
 
 - **Text Analysis**: Analyze news headlines to determine their credibility.
 - **Audio Analysis**: Upload audio files, transcribe them, and analyze the transcribed text.
 - **Image Analysis**: Upload images, extract text using OCR, and analyze the extracted content.
 - **Video Analysis**: Upload videos, extract audio, transcribe the audio, and analyze the transcribed text.
-- **Real-Time News Analysis**: Fetch and analyze top news headlines in real-time.
+- **Real-Time News Analysis and Dashboard**: Fetch and analyze top news headlines in real-time and displays the analysed metrics and graphs on dashboard.
 
 ## Installation
 
@@ -102,5 +102,6 @@ This project leverages technologies and services from:
 - spaCy
 - FFmpeg
 - Tesseract OCR
-
+- PyTorch
+- Whisper
 
