@@ -10,10 +10,6 @@ import numpy as np
 # Import Streamlit only if needed for logging or UI
 import streamlit as st
 
-# ---------------------------
-# Constants
-# ---------------------------
-
 GOOGLE_API_KEY = st.secrets["google"]["search_api_key"]
 CUSTOM_SEARCH_ENGINE_ID = st.secrets["google"]["search_engine_id"]
 
@@ -27,14 +23,9 @@ TRUSTED_SOURCES = [
     "dw.com", "indianexpress.com", "dailymail.co.uk", "smh.com.au", "mint.com", "livemint.com"
 ]
 
-# Initialize the tokenizer and model for BERT
-# It is recommended to initialize these outside of functions if reused frequently
+# Initializing the tokenizer and model for BERT
 tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 model = AutoModel.from_pretrained("bert-base-uncased")
-
-# ---------------------------
-# Helper Functions
-# ---------------------------
 
 def get_embeddings(text):
     """
