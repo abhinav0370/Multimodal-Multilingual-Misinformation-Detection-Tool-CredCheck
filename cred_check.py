@@ -10,10 +10,6 @@ import numpy as np
 # Import Streamlit only if needed for logging or UI
 import streamlit as st
 
-# ---------------------------
-# Constants
-# ---------------------------
-
 GOOGLE_API_KEY = st.secrets["google"]["search_api_key"]
 CUSTOM_SEARCH_ENGINE_ID = st.secrets["google"]["search_engine_id"]
 
@@ -27,44 +23,21 @@ TRUSTED_SOURCES = [
     "dw.com", "indianexpress.com", "dailymail.co.uk", "smh.com.au", "mint.com", "livemint.com"
 ]
 
-# Initialize the tokenizer and model for BERT
-# It is recommended to initialize these outside of functions if reused frequently
+# Initializes the tokenizer and model for BERT
+
 tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 model = AutoModel.from_pretrained("bert-base-uncased")
 
-# ---------------------------
-# Helper Functions
-# ---------------------------
-
 def get_embeddings(text):
-    """
-    Generates embeddings for the given text using BERT.
-
-    Args:
-        text (str): The input text.
-
-    Returns:
-        numpy.ndarray: The computed embeddings.
-    """
-    # Tokenize the input text
+    # Tokenizes the input text
     inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
     # Get model outputs
     outputs = model(**inputs)
-    # Compute the mean of the last hidden states to get a fixed-size vector
+    # Computes the mean of the last hidden states to get a fixed-size vector
     embeddings = torch.mean(outputs.last_hidden_state, dim=1)
     return embeddings.detach().numpy()
 
 def google_search(query, num_results=5):
-    """
-    Performs a Google Custom Search for the given query.
-
-    Args:
-        query (str): The search query.
-        num_results (int, optional): Number of search results to retrieve. Defaults to 5.
-
-    Returns:
-        list or dict: A list of search result dictionaries or an error dictionary.
-    """
     url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={GOOGLE_API_KEY}&cx={CUSTOM_SEARCH_ENGINE_ID}"
     response = requests.get(url)
     if response.status_code == 200:
@@ -82,36 +55,19 @@ def google_search(query, num_results=5):
         return {"error": f"Error {response.status_code}: {response.text}"}
 
 def check_trusted_source(link):
-    """
-    Checks if the provided link is from a trusted source.
-
-    Args:
-        link (str): The URL to check.
-
-    Returns:
-        bool: True if the source is trusted, False otherwise.
-    """
+    # Checks if the provided link is from a trusted source.
     for source in TRUSTED_SOURCES:
         if source in link:
             return True
     return False
 
 def calculate_similarity(headline, search_results):
-    """
-    Calculates the cosine similarity between the headline and each search result.
-
-    Args:
-        headline (str): The news headline.
-        search_results (list): List of search result dictionaries.
-
-    Returns:
-        list: List of similarity scores.
-    """
+    #Calculates the cosine similarity between the headline and each search results
     headline_emb = get_embeddings(headline)
     similarities = []
 
     for result in search_results:
-        # Combine title and description for a comprehensive comparison
+        # Combines title and description for a comprehensive comparison
         result_text = result["title"] + " " + result["description"]
         result_emb = get_embeddings(result_text)
         # Calculate cosine similarity
@@ -121,16 +77,6 @@ def calculate_similarity(headline, search_results):
     return similarities
 
 def enhance_credibility_score(link, headline):
-    """
-    Enhances the credibility score based on the source and headline content.
-
-    Args:
-        link (str): The URL of the article.
-        headline (str): The news headline.
-
-    Returns:
-        float: The credibility score.
-    """
     credibility_score = 0
 
     if check_trusted_source(link):
@@ -140,15 +86,8 @@ def enhance_credibility_score(link, headline):
     return credibility_score
 
 def fake_news_detector(headline):
-    """
-    Detects whether a news headline is fake based on similarity and credibility scores.
+    # Detects whether a news headline is fake based on similarity and credibility scores.
 
-    Args:
-        headline (str): The news headline to analyze.
-
-    Returns:
-        dict: Dictionary containing analysis results.
-    """
     search_results = google_search(headline.strip())
     if isinstance(search_results, dict) and "error" in search_results:
         return search_results
