@@ -1,6 +1,6 @@
 # Multimodal and Multilingual Misinformation Detection Tool-CredCheck
 
-A comprehensive application designed to detect fake news from various inputs such as text, audio, images, and videos.
+A comprehensive web application designed to detect fake news from various inputs such as text, audio, images, and videos.
 
 ## Functionalities
 
@@ -99,7 +99,7 @@ This project leverages technologies and services from:
 - Streamlit
 - ClaimBuster
 - Google Generative AI
-- spaCy
+- Scikit-learn
 - FFmpeg
 - Tesseract OCR
 - PyTorch
