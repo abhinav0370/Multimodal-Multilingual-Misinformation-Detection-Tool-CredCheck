@@ -13,7 +13,7 @@ os.environ['GOOGLE_API_KEY'] = st.secrets["google"]["language_api_key"]
 genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
 
 # Load the desired model
-model = genai.GenerativeModel("gemini-1.0-pro")
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 def translation(query):
     prompt = f"Convert this '{query}' to English language."
