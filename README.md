@@ -218,10 +218,6 @@ Scroll down to see:
 - YouTube for video content API
 - Various news outlets for their RSS feeds
 
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
 ---
 
 *CredCheck - Empowering users to verify the truth behind the headlines*
