@@ -1,4 +1,4 @@
-# CredCheck - Multilayered Fake News Detection System
+# CredCheck - Multimodal-Multilingual Misinformation Detection System
 
 ![CredCheck Logo](static/images/img1.png)
 
