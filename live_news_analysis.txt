@@ -1,0 +1,18 @@
+Time: 2025-04-05 15:43:29
+News: \boxed{"Children in Gaza have been struggling with displacement, disease, and malnutrition. UNICEF is reporting that one in three children under the age of two are starving because of Israel's blockades. The UN agency warns that one million children are at risk unless aid is consistently allowed into the strip."}
+Classification: REAL
+Verdict: \boxed{Real}
+--------------------------------------------------------------------------------
+
+Time: 2025-04-05 15:52:28
+News: \boxed{"Turkey is again talking about a possible resolution to the conflict with the outlawed Kurdistan workers party. Fighting between government forces and the group has killed more than 40,000 people in nearly three decades."}
+Classification: REAL
+Verdict: \boxed{Real}
+--------------------------------------------------------------------------------
+
+Time: 2025-04-05 16:43:16
+News: \boxed{"President Donald Trump's new tariffs have caused global markets to drop sharply and raised fears of a global trade war. Prime Minister of Japan Shinzo Abe plans to arrange a phone call with Trump, labeling the tariffs a national crisis for Japan. Japanese stocks marked their sharpest weekly drop in five years due to the trade concern. African nations such as South Africa face a 30% tariff on goods and Madagascar faces a 47% tariff on exports such as its vanilla, which makes up 80% of the world’s supply. Masuto (which appears to be a mispronounced African country) is the hardest hit nation on the continent with a 50% levy on its exports to the United States."}
+Classification: FAKE
+Verdict: \boxed{Fake}
+--------------------------------------------------------------------------------
+
