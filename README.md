@@ -1,4 +1,4 @@
-# CredCheck - Multilayered Fake News Detection System
+# CredCheck - Multimodal and Miltilingual Fake News Detection System
 
 ![CredCheck Logo](static/images/img1.png)
 
@@ -8,7 +8,7 @@ CredCheck is an advanced fake news detection platform featuring a unique multila
 
 - **Layered Verification System**: Three independent verification methods to ensure thorough analysis:
   - **Layer 1**: Credibility check against trusted sources
-  - **Layer 2**: AI analysis using DeepSeek's advanced model
+  - **Layer 2**: AI analysis using DeepSeek R1 LLM 
   - **Layer 3**: ClaimBuster fact-checking for suspicious content
 
 - **Multiple Content Formats**:
